@@ -8,6 +8,7 @@ use App\Http\Requests\CreatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostsController extends Controller
@@ -30,6 +31,12 @@ class PostsController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
+        if ($data['image']) {
+            $ext = last(explode(".", $data['image']));
+            $file = Str::random() . "." . $ext;
+            Storage::putFileAs('public', $data['image'], $file);
+            $data['image'] = $file;
+        }
         $post = Post::query()->create($data);
         return PostResource::make($post);
     }
@@ -41,7 +48,13 @@ class PostsController extends Controller
         $post->title = data_get($data, 'title', $post->title);
         $post->status = data_get($data, 'status', $post->status);
         $post->content = data_get($data, 'content', $post->content);
-        $post->image = data_get($data, 'image', $post->image);
+        if ($data['image']) {
+            $ext = last(explode(".", $data['image']));
+            Storage::delete("public/$post->image");
+            $file = Str::random() . "." . $ext;
+            Storage::putFileAs('public', $data['image'], $file);
+            $post->image = data_get($data, 'image', $file);
+        }
 
         return PostResource::make($post);
     }
