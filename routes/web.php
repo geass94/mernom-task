@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get("/posts/{slug}", )
+Route::get("/posts/{slug}", \App\Http\Controllers\ViewPostController::class);
