@@ -8,6 +8,7 @@ use App\Http\Requests\CreatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -31,11 +32,9 @@ class PostsController extends Controller
     {
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
-        if ($data['image']) {
-            $ext = last(explode(".", $data['image']));
-            $file = Str::random() . "." . $ext;
-            Storage::putFileAs('public', $data['image'], $file);
-            $data['image'] = $file;
+        if (array_key_exists('image', $data) && $data['image'] instanceof UploadedFile) {
+            $image = $data['image'];
+            $data['image'] = $this->saveImage($image);
         }
         $post = Post::query()->create($data);
         return PostResource::make($post);
@@ -48,13 +47,12 @@ class PostsController extends Controller
         $post->title = data_get($data, 'title', $post->title);
         $post->status = data_get($data, 'status', $post->status);
         $post->content = data_get($data, 'content', $post->content);
-        if ($data['image']) {
-            $ext = last(explode(".", $data['image']));
-            Storage::delete("public/$post->image");
-            $file = Str::random() . "." . $ext;
-            Storage::putFileAs('public', $data['image'], $file);
-            $post->image = data_get($data, 'image', $file);
+        if (array_key_exists('image', $data) && $data['image'] instanceof UploadedFile) {
+            $image = $data['image'];
+            $post->image = data_get($data, 'image', $this->saveImage($image));
         }
+
+        $post->save();
 
         return PostResource::make($post);
     }
@@ -66,5 +64,13 @@ class PostsController extends Controller
         $deleted = $post->delete();
 
         return response()->setStatusCode(200);
+    }
+
+    private function saveImage(UploadedFile $image): string
+    {
+        $ext = $image->getClientOriginalExtension();
+        $fileName = Str::random(64) . "." . $ext;
+        $image->storeAs('public', $fileName);
+        return $fileName;
     }
 }

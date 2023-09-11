@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
 class CreatePostRequest extends FormRequest
@@ -27,9 +29,17 @@ class CreatePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'status' => Rule::in(Post::$statuses),
+            'status' => 'string',
             'content' => 'string',
             'image' => 'file'
         ];
     }
+
+    protected function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors(),
+        ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+    }
+
 }
