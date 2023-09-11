@@ -31,14 +31,14 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     ports:
-      - 3303:3306
+      - 3304:3306
 
   nginx:
     image: nginx:1.19.8-alpine
     restart: unless-stopped
     tty: true
     ports:
-      - 8083:80
+      - 8084:80
     volumes:
       - ./:/var/www
       - ./.docker/nginx/conf:/etc/nginx/conf.d
