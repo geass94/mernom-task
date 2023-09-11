@@ -43,7 +43,7 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\SelectColumn::make('status')
                     ->options(Post::$statuses)
             ])
