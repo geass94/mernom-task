@@ -31,10 +31,14 @@ class PostsController extends Controller
     public function create(CreatePostRequest $request)
     {
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['title']);
+        $slug = Str::slug($data['title']);
+        if (Post::slugExists($slug)) {
+            $slug = Post::getIncrementedSlug($slug);
+        }
+        $data['slug'] = $slug;
         if (array_key_exists('image', $data) && $data['image'] instanceof UploadedFile) {
             $image = $data['image'];
-            $data['image'] = $this->saveImage($image);
+            $data['image'] = Post::saveImage($image);
         }
         $post = Post::query()->create($data);
         return PostResource::make($post);
@@ -49,7 +53,7 @@ class PostsController extends Controller
         $post->content = data_get($data, 'content', $post->content);
         if (array_key_exists('image', $data) && $data['image'] instanceof UploadedFile) {
             $image = $data['image'];
-            $post->image = data_get($data, 'image', $this->saveImage($image));
+            $post->image = data_get($data, 'image', Post::saveImage($image));
         }
 
         $post->save();
@@ -63,14 +67,6 @@ class PostsController extends Controller
 
         $deleted = $post->delete();
 
-        return response()->setStatusCode(200);
-    }
-
-    private function saveImage(UploadedFile $image): string
-    {
-        $ext = $image->getClientOriginalExtension();
-        $fileName = Str::random(64) . "." . $ext;
-        $image->storeAs('public', $fileName);
-        return $fileName;
+        return response()->json(['status' => (bool)$deleted]);
     }
 }
