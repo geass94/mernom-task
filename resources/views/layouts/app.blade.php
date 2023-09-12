@@ -10,18 +10,16 @@
     <meta content="@yield('og:image', 'default.jpg')" property="og:image">
 
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon">
-    <link href="images/webclip.png" rel="apple-touch-icon">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
     @stack('styles')
 </head>
 <body>
-    @include('layout.header')
-    <main class="main-wrapper">
+    @include('layouts.header')
+    <main>
         @yield('content')
     </main>
-    @include('layout.footer')
-    <script src="js/app.js" type="text/javascript"></script>
+    @include('layouts.footer')
+    <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
     @stack('scripts')
 </body>
 </html>

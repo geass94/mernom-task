@@ -1,44 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-</head>
-<body>
-<header>
-    <nav class="relative container mx-auto">
-        <div class="flex items-center justify-between ">
-            <div class="pt-2">
-                <img src="images/logo.png" alt="Logo">
-            </div>
-            <div class="hidden md:flex w-full flex-col space-y-4 pb-2 border-b border-solid border-b-2 border-amber-400">
-                <div class="flex justify-end">
-                    <ul class="flex flex-inline space-x-4">
-                        <li><a href="mailto:info@company.com">info@company.com</a></li>
-                        <li><a href="#">EN</a></li>
-                        <li><a href="#">GR</a></li>
-                    </ul>
-                </div>
-                <div class="flex justify-end">
-                    <ul class="flex flex-inline space-x-4 ">
-                        <li><a href="#" class="hover:text-grey">About Us</a></li>
-                        <li><a href="#">Products</a></li>
-                        <li><a href="#">Service</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Search</a></li>
-                    </ul>
-                </div>
+@extends('layouts.app')
 
-            </div>
-        </div>
-    </nav>
-</header>
-<main>
+    @section('content')
     <section id="hero">
         <div class="w-full py-1 ">
-            <img src="images/image1.png" class="w-full object-contain h-1/5" alt="Hero">
+            <img src="{{asset('images/image1.png')}}" class="w-full object-contain h-1/5" alt="Hero">
         </div>
     </section>
     <section id="about-us">
@@ -100,7 +65,7 @@
                 <h2 class="text-gray-700 text-4xl uppercase font-bold">Products</h2>
                 <div class="grid grid-cols-3 gap-0.5 py-24">
                     <div class="relative h-12">
-                        <img src="images/image2.png" alt="Wheat" class="absolute top-0 left-0 z-0">
+                        <img src="{{asset('images/image2.png')}}" alt="Wheat" class="absolute top-0 left-0 z-0">
                         <div class="relative z-10">
                             <h3>Wheat</h3>
                             <div class="descrption hidden">
@@ -112,9 +77,5 @@
             </div>
         </div>
     </section>
-</main>
-<footer>
+    @endsection
 
-</footer>
-</body>
-</html>
