@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => '/v1/'], function () {
+Route::group(['prefix' => '/v1'], function () {
 
     Route::group(['prefix' => '/posts'], function () {
         Route::get("/", [\App\Http\Controllers\API\V1\PostsController::class, 'getPosts']);
@@ -27,5 +27,7 @@ Route::group(['prefix' => '/v1/'], function () {
         Route::put("/{postId}", [\App\Http\Controllers\API\V1\PostsController::class, 'update']);
         Route::delete("/{delete}", [\App\Http\Controllers\API\V1\PostsController::class, 'delete']);
     });
+
+    Route::get("/crawler", \App\Http\Controllers\API\V1\CrawlerController::class);
 
 });

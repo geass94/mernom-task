@@ -26,6 +26,7 @@ RUN docker-php-ext-enable pdo_mysql zip intl mbstring exif pcntl bcmath gd socke
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+ENV NODE_PATH=/var/www/node_modules
 
 # Add user for laravel application
 RUN groupadd -g 1000 www
